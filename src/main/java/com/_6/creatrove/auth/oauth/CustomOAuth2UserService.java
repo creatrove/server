@@ -1,5 +1,6 @@
 package com._6.creatrove.auth.oauth;
 
+import com._6.creatrove.auth.exception.UnsupportedProviderException;
 import com._6.creatrove.auth.oauth.info.GoogleUserInfo;
 import com._6.creatrove.auth.oauth.info.OAuth2UserInfo;
 import com._6.creatrove.user.domain.User;
@@ -24,7 +25,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2UserInfo userInfo = switch (registrationId) {
             case "google" -> new GoogleUserInfo(oAuth2User.getAttributes());
-            default -> throw new OAuth2AuthenticationException("지원하지 않는 provider: " + registrationId);
+            default -> throw new UnsupportedProviderException(registrationId);
         };
 
         User user = userRepository.findByEmail(userInfo.getEmail())
