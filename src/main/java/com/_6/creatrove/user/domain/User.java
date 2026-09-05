@@ -3,17 +3,14 @@ package com._6.creatrove.user.domain;
 import com._6.creatrove.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "users")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
     @Id
@@ -23,7 +20,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = true)
+    @Column(nullable = true, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -33,6 +30,19 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserStatus status;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Builder
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+        this.widgetInstalled = false;
+        this.status = UserStatus.ACTIVE;
+    }
+
+    public void updateProfile(String name) {
+        this.name = name;
+    }
+
+    public void withdraw() {
+        this.status = UserStatus.WITHDRAWN;
+    }
 }
