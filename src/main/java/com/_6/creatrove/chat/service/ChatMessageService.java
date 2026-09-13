@@ -71,7 +71,9 @@ public class ChatMessageService {
                             .category(result.memo().category())
                             .build()
             );
-            items.add(new TroveItemDto("MEMO", memo.getId(), memo.getContent(), null, null, null, null));
+            // ★ 수정 1: label 인자 추가
+            items.add(new TroveItemDto("MEMO", memo.getId(), memo.getContent(), null, null, null, null,
+                    "메모 " + memo.getCategory().displayName()));
         }
 
         if (result.calendar() != null) {
@@ -84,8 +86,11 @@ public class ChatMessageService {
                             .source(EventSource.CAPTURE)
                             .build()
             );
+            // ★ 수정 2: label 인자 추가 (M/d 형식)
+            String dateLabel = event.getEventDate().getMonthValue() + "/" + event.getEventDate().getDayOfMonth();
             items.add(new TroveItemDto("CALENDAR", event.getId(), event.getTitle(),
-                    event.getEventDate().toString(), null, null, null));
+                    event.getEventDate().toString(), null, null, null,
+                    "캘린더 " + dateLabel));
         }
 
         if (result.ledger() != null) {
@@ -107,8 +112,10 @@ public class ChatMessageService {
                                 .entryDate(draft.date())
                                 .build()
                 );
+                // ★ 수정 3: label 인자 추가
                 items.add(new TroveItemDto("LEDGER", entry.getId(), null, null,
-                        entry.getItem(), entry.getAmount(), entry.getStatus().name()));
+                        entry.getItem(), entry.getAmount(), entry.getStatus().name(),
+                        formatLedgerLabel(entry.getAmount(), entry.getStatus())));
             }
         }
 
@@ -154,8 +161,10 @@ public class ChatMessageService {
 
         message.updateClassification(ClassifiedType.LEDGER);
 
+        // ★ 수정 4: label 인자 추가
         TroveItemDto item = new TroveItemDto("LEDGER", entry.getId(), null, null,
-                entry.getItem(), entry.getAmount(), entry.getStatus().name());
+                entry.getItem(), entry.getAmount(), entry.getStatus().name(),
+                formatLedgerLabel(entry.getAmount(), entry.getStatus()));
 
         return new ChatMessageResponse(
                 message.getId(), message.getContent(), ClassifiedType.LEDGER.name(),
@@ -171,5 +180,9 @@ public class ChatMessageService {
             return ClassifiedType.MULTI;
         }
         return ClassifiedType.valueOf(items.get(0).type());
+    }
+
+    private String formatLedgerLabel(Long amount, IncomeStatus status) {
+        return "장부 +%,d %s".formatted(amount, status.displayName());
     }
 }
