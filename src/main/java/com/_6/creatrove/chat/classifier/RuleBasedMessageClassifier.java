@@ -1,5 +1,6 @@
 package com._6.creatrove.chat.classifier;
 
+import com._6.creatrove.calendar.domain.EventCategory;
 import com._6.creatrove.memo.domain.MemoCategory;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +57,8 @@ public class RuleBasedMessageClassifier implements MessageClassifier {
         return new LedgerDraft(content, amount, LocalDate.now());
     }
 
+    private static final List<String> PERSONAL_KEYWORDS = List.of("생일", "병원", "가족", "개인", "약속");
+
     private CalendarDraft extractCalendar(String content) {
         Matcher matcher = DATE_PATTERN.matcher(content);
         boolean hasDeadlineKeyword = DEADLINE_KEYWORDS.stream().anyMatch(content::contains);
@@ -72,12 +75,12 @@ public class RuleBasedMessageClassifier implements MessageClassifier {
                 int day = Integer.parseInt(matcher.group(2));
                 date = LocalDate.of(LocalDate.now().getYear(), month, day);
             } catch (NumberFormatException | DateTimeException e) {
-                // 13/45처럼 존재하지 않는 날짜면 오늘 날짜로 대체 (500 방지)
                 date = LocalDate.now();
             }
         }
 
-        return new CalendarDraft(content, date, null);
+        // 채팅 캡처는 하루짜리 단일 일정, 기본 카테고리는 업무
+        return new CalendarDraft(content, date, date, null, EventCategory.WORK);
     }
 
     private MemoDraft extractMemo(String content) {

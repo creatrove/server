@@ -1,6 +1,7 @@
 package com._6.creatrove.global.exception;
 
 import com._6.creatrove.auth.exception.UnsupportedProviderException;
+import com._6.creatrove.calendar.exception.CalendarEventNotFoundException;
 import com._6.creatrove.chat.exception.DuplicateLedgerEntryException;
 import com._6.creatrove.user.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -95,6 +96,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(com._6.creatrove.chat.exception.ChatMessageNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleChatMessageNotFound(
             com._6.creatrove.chat.exception.ChatMessageNotFoundException e, HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND, e.getMessage(), request);
+    }
+
+    @ExceptionHandler(CalendarEventNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCalendarEventNotFound(
+            CalendarEventNotFoundException e, HttpServletRequest request) {
         return build(HttpStatus.NOT_FOUND, e.getMessage(), request);
     }
 

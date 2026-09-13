@@ -34,18 +34,28 @@ public class CalendarEvent extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "event_date", nullable = false)
-    private LocalDate eventDate;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EventCategory category;
+
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
     @Column(name = "event_time")
-    private LocalTime eventTime; // nullable: "시간 없음" 토글 대응
+    private LocalTime eventTime;
+
+    @Column(name = "event_end_time")
+    private LocalTime eventEndTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EventSource source;
 
     @Column(name = "external_event_id")
-    private String externalEventId; // 구글/애플 연동 시 중복 방지용 원본 ID
+    private String externalEventId;
 
     @Column(name = "viewed_at")
     private LocalDateTime viewedAt;
@@ -54,24 +64,27 @@ public class CalendarEvent extends BaseEntity {
         this.viewedAt = LocalDateTime.now();
     }
 
-    @Column(name = "event_end_time")
-    private LocalTime eventEndTime; // nullable: 종료 시간 없는 일정(마감일 등)도 있음
-
     @Builder
-    public CalendarEvent(User user, ChatMessage sourceMessage, String title,
-                         LocalDate eventDate, LocalTime eventTime, LocalTime eventEndTime, EventSource source) {
+    public CalendarEvent(User user, ChatMessage sourceMessage, String title, EventCategory category,
+                         LocalDate startDate, LocalDate endDate,
+                         LocalTime eventTime, LocalTime eventEndTime, EventSource source) {
         this.user = user;
         this.sourceMessage = sourceMessage;
         this.title = title;
-        this.eventDate = eventDate;
+        this.category = category;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.eventTime = eventTime;
         this.eventEndTime = eventEndTime;
         this.source = source;
     }
 
-    public void update(String title, LocalDate eventDate, LocalTime eventTime, LocalTime eventEndTime) {
+    public void update(String title, EventCategory category, LocalDate startDate, LocalDate endDate,
+                       LocalTime eventTime, LocalTime eventEndTime) {
         this.title = title;
-        this.eventDate = eventDate;
+        this.category = category;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.eventTime = eventTime;
         this.eventEndTime = eventEndTime;
     }

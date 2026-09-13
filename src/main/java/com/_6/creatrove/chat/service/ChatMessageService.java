@@ -1,6 +1,7 @@
 package com._6.creatrove.chat.service;
 
 import com._6.creatrove.calendar.domain.CalendarEvent;
+import com._6.creatrove.calendar.domain.EventCategory;
 import com._6.creatrove.calendar.domain.EventSource;
 import com._6.creatrove.calendar.repository.CalendarEventRepository;
 import com._6.creatrove.chat.classifier.*;
@@ -77,20 +78,23 @@ public class ChatMessageService {
         }
 
         if (result.calendar() != null) {
+            CalendarDraft calendarDraft = result.calendar();
+
             CalendarEvent event = calendarEventRepository.save(
                     CalendarEvent.builder()
                             .user(user).sourceMessage(message)
-                            .title(result.calendar().title())
-                            .eventDate(result.calendar().date())
-                            .eventTime(result.calendar().time())
+                            .title(calendarDraft.title())
+                            .category(calendarDraft.category())
+                            .startDate(calendarDraft.startDate())
+                            .endDate(calendarDraft.endDate())
+                            .eventTime(calendarDraft.time())
                             .eventEndTime(null)
                             .source(EventSource.CAPTURE)
                             .build()
             );
-            // ★ 수정 2: label 인자 추가 (M/d 형식)
-            String dateLabel = event.getEventDate().getMonthValue() + "/" + event.getEventDate().getDayOfMonth();
+            String dateLabel = event.getStartDate().getMonthValue() + "/" + event.getStartDate().getDayOfMonth();
             items.add(new TroveItemDto("CALENDAR", event.getId(), event.getTitle(),
-                    event.getEventDate().toString(), null, null, null,
+                    event.getStartDate().toString(), null, null, null,
                     "캘린더 " + dateLabel));
         }
 
