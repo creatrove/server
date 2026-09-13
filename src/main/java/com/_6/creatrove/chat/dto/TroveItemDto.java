@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record TroveItemDto(
-        String type,     // MEMO, CALENDAR, LEDGER
+        String type,
         Long id,
-        String title,    // CALENDAR/MEMO용
-        String date,     // CALENDAR용
-        String item,     // LEDGER용
-        Long amount,      // LEDGER용
-        String status     // LEDGER용
+        String title,
+        String date,
+        String item,
+        Long amount,
+        String status,
+        String label
 ) {}

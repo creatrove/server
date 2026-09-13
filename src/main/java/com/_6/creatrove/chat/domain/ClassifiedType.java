@@ -6,5 +6,6 @@ public enum ClassifiedType {
     CALENDAR,
     LEDGER,
     MULTI,       // 하나의 메시지가 여러 트로브로 분류됨
-    AMBIGUOUS    // AI가 확신 못해 사용자에게 되물어야 함
+    AMBIGUOUS,    // AI가 확신 못해 사용자에게 되물어야 함
+    DUPLICATE    // 장부 중복 후보 발견, 사용자 선택 대기
 }
