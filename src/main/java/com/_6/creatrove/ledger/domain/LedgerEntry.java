@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -41,6 +42,13 @@ public class LedgerEntry extends BaseEntity {
 
     @Column(name = "entry_date", nullable = false)
     private LocalDate entryDate;
+
+    @Column(name = "viewed_at")
+    private LocalDateTime viewedAt;
+
+    public void markViewed() {
+        this.viewedAt = LocalDateTime.now();
+    }
 
     @Builder
     public LedgerEntry(User user, ChatMessage sourceMessage, String item,

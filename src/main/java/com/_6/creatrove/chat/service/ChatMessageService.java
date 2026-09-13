@@ -83,6 +83,7 @@ public class ChatMessageService {
                             .title(result.calendar().title())
                             .eventDate(result.calendar().date())
                             .eventTime(result.calendar().time())
+                            .eventEndTime(null)
                             .source(EventSource.CAPTURE)
                             .build()
             );
