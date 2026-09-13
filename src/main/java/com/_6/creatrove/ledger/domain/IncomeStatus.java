@@ -1,6 +1,12 @@
 package com._6.creatrove.ledger.domain;
 
 public enum IncomeStatus {
-    COMPLETED,  // 완료 — 월 합계에 포함
-    SCHEDULED   // 예정 — 합계에서 제외, 별도 표시
+    COMPLETED, SCHEDULED;
+
+    public String displayName() {
+        return switch (this) {
+            case COMPLETED -> "완료";
+            case SCHEDULED -> "예정";
+        };
+    }
 }

@@ -6,6 +6,6 @@ public record UserResponse(
         Long userId,
         String name,
         String email,
+        Boolean onboardingCompleted,
         UserStatus status
-) {
-}
+) {}

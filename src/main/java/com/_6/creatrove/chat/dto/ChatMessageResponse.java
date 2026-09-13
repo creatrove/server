@@ -10,5 +10,6 @@ public record ChatMessageResponse(
         LocalDateTime createdAt,
         TroveItemDto troveItem,
         List<TroveItemDto> troveItems,
-        List<String> suggestedCategories
+        List<String> suggestedCategories,
+        DuplicateCandidateDto duplicateCandidate
 ) {}
