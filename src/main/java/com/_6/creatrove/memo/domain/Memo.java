@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "memos")
@@ -25,7 +27,7 @@ public class Memo extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_message_id")
-    private ChatMessage sourceMessage; // nullable: 직접 생성된 메모도 허용
+    private ChatMessage sourceMessage;
 
     @Lob
     @Column(nullable = false)
@@ -37,6 +39,13 @@ public class Memo extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean pinned;
+
+    @Column(name = "viewed_at")
+    private LocalDateTime viewedAt;
+
+    public void markViewed() {
+        this.viewedAt = LocalDateTime.now();
+    }
 
     @Builder
     public Memo(User user, ChatMessage sourceMessage, String content, MemoCategory category) {

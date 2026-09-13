@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -46,20 +47,32 @@ public class CalendarEvent extends BaseEntity {
     @Column(name = "external_event_id")
     private String externalEventId; // 구글/애플 연동 시 중복 방지용 원본 ID
 
+    @Column(name = "viewed_at")
+    private LocalDateTime viewedAt;
+
+    public void markViewed() {
+        this.viewedAt = LocalDateTime.now();
+    }
+
+    @Column(name = "event_end_time")
+    private LocalTime eventEndTime; // nullable: 종료 시간 없는 일정(마감일 등)도 있음
+
     @Builder
     public CalendarEvent(User user, ChatMessage sourceMessage, String title,
-                         LocalDate eventDate, LocalTime eventTime, EventSource source) {
+                         LocalDate eventDate, LocalTime eventTime, LocalTime eventEndTime, EventSource source) {
         this.user = user;
         this.sourceMessage = sourceMessage;
         this.title = title;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
+        this.eventEndTime = eventEndTime;
         this.source = source;
     }
 
-    public void update(String title, LocalDate eventDate, LocalTime eventTime) {
+    public void update(String title, LocalDate eventDate, LocalTime eventTime, LocalTime eventEndTime) {
         this.title = title;
         this.eventDate = eventDate;
         this.eventTime = eventTime;
+        this.eventEndTime = eventEndTime;
     }
 }

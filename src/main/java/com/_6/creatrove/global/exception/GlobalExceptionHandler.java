@@ -86,6 +86,12 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, e.getMessage(), request);
     }
 
+    @ExceptionHandler(com._6.creatrove.memo.exception.MemoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMemoNotFound(
+            com._6.creatrove.memo.exception.MemoNotFoundException e, HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND, e.getMessage(), request);
+    }
+
     @ExceptionHandler(com._6.creatrove.chat.exception.ChatMessageNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleChatMessageNotFound(
             com._6.creatrove.chat.exception.ChatMessageNotFoundException e, HttpServletRequest request) {
