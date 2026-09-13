@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    @GetMapping("/api/users/me")
+    @GetMapping("/users/me")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
