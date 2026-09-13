@@ -1,6 +1,7 @@
 package com._6.creatrove.global.exception;
 
 import com._6.creatrove.auth.exception.UnsupportedProviderException;
+import com._6.creatrove.chat.exception.DuplicateLedgerEntryException;
 import com._6.creatrove.user.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +78,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
         log.error("Unhandled exception at {}", request.getRequestURI(), e);
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.", request);
+    }
+
+    // 장부 중복 감지
+    @ExceptionHandler(DuplicateLedgerEntryException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateLedger(DuplicateLedgerEntryException e, HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT, e.getMessage(), request);
     }
 
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String message, HttpServletRequest request) {
