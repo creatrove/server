@@ -1,13 +1,18 @@
 package com._6.creatrove.user.controller;
 
 import com._6.creatrove.user.domain.User;
+import com._6.creatrove.user.dto.UpdateProfileRequest;
 import com._6.creatrove.user.dto.UserResponse;
 import com._6.creatrove.user.exception.UserNotFoundException;
 import com._6.creatrove.user.repository.UserRepository;
+import com._6.creatrove.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/users/me")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal Long userId) {
@@ -22,7 +28,18 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         return ResponseEntity.ok(new UserResponse(
-                user.getUserId(), user.getName(), user.getEmail(), user.getStatus()
+                user.getUserId(), user.getName(), user.getEmail(), user.getOnboardingCompleted(), user.getStatus()
         ));
+    }
+
+    @PatchMapping("/users/me")
+    public UserResponse updateProfile(@AuthenticationPrincipal Long userId,
+                                      @Valid @RequestBody UpdateProfileRequest request) {
+        return userService.updateProfile(userId, request);
+    }
+
+    @PatchMapping("/users/me/onboarding")
+    public UserResponse completeOnboarding(@AuthenticationPrincipal Long userId) {
+        return userService.completeOnboarding(userId);
     }
 }

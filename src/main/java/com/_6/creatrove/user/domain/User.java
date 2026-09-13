@@ -26,6 +26,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private Boolean widgetInstalled;
 
+    @Column(name = "onboarding_completed", nullable = false)
+    private Boolean onboardingCompleted;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserStatus status;
@@ -35,11 +38,16 @@ public class User extends BaseEntity {
         this.name = name;
         this.email = email;
         this.widgetInstalled = false;
+        this.onboardingCompleted = false;
         this.status = UserStatus.ACTIVE;
     }
 
     public void updateProfile(String name) {
         this.name = name;
+    }
+
+    public void completeOnboarding() {
+        this.onboardingCompleted = true;
     }
 
     public void withdraw() {
