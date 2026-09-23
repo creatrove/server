@@ -3,6 +3,7 @@ package com._6.creatrove.global.exception;
 import com._6.creatrove.auth.exception.UnsupportedProviderException;
 import com._6.creatrove.calendar.exception.CalendarEventNotFoundException;
 import com._6.creatrove.chat.exception.DuplicateLedgerEntryException;
+import com._6.creatrove.ledger.exception.LedgerEntryNotFoundException;
 import com._6.creatrove.user.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -102,6 +103,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CalendarEventNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCalendarEventNotFound(
             CalendarEventNotFoundException e, HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND, e.getMessage(), request);
+    }
+
+    @ExceptionHandler(LedgerEntryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLedgerEntryNotFound(
+            LedgerEntryNotFoundException e, HttpServletRequest request) {
         return build(HttpStatus.NOT_FOUND, e.getMessage(), request);
     }
 
