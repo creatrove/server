@@ -5,6 +5,7 @@ import com._6.creatrove.memo.domain.MemoCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemoRepository extends JpaRepository<Memo, Long> {
 
@@ -15,4 +16,6 @@ public interface MemoRepository extends JpaRepository<Memo, Long> {
     List<Memo> findTop10ByUser_UserIdAndViewedAtIsNotNullOrderByViewedAtDesc(Long userId);
 
     List<Memo> findByUser_UserIdAndContentContainingIgnoreCase(Long userId, String keyword);
+
+    Optional<Memo> findByIdAndUser_UserId(Long id, Long userId);
 }
