@@ -2,10 +2,7 @@ package com._6.creatrove.memo.service;
 
 import com._6.creatrove.memo.domain.Memo;
 import com._6.creatrove.memo.domain.MemoCategory;
-import com._6.creatrove.memo.dto.MemoCategoryResponse;
-import com._6.creatrove.memo.dto.MemoGroupResponse;
-import com._6.creatrove.memo.dto.MemoListResponse;
-import com._6.creatrove.memo.dto.MemoResponse;
+import com._6.creatrove.memo.dto.*;
 import com._6.creatrove.memo.exception.MemoNotFoundException;
 import com._6.creatrove.memo.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +59,34 @@ public class MemoService {
         memo.markViewed();
 
         return toResponse(memo);
+    }
+
+    @Transactional
+    public MemoUpdateResponse updateMemo(Long userId, Long memoId, MemoUpdateRequest request) {
+        Memo memo = memoRepository.findByIdAndUser_UserId(memoId, userId)
+                .orElseThrow(() -> new MemoNotFoundException(memoId));
+        if (request.content() != null && !request.content().isBlank()) {
+            memo.updateContent(request.content());
+        }
+        if (request.category() != null) {
+            memo.updateCategory(request.category());
+        }
+        return MemoUpdateResponse.from(memo);
+    }
+
+    @Transactional
+    public MemoUpdateResponse togglePin(Long userId, Long memoId) {
+        Memo memo = memoRepository.findByIdAndUser_UserId(memoId, userId)
+                .orElseThrow(() -> new MemoNotFoundException(memoId));
+        memo.togglePin();
+        return MemoUpdateResponse.from(memo);
+    }
+
+    @Transactional
+    public void deleteMemo(Long userId, Long memoId) {
+        Memo memo = memoRepository.findByIdAndUser_UserId(memoId, userId)
+                .orElseThrow(() -> new MemoNotFoundException(memoId));
+        memoRepository.delete(memo);
     }
 
     private MemoResponse toResponse(Memo memo) {

@@ -59,6 +59,10 @@ public class Memo extends BaseEntity {
         this.content = content;
     }
 
+    public void updateCategory(MemoCategory category) {
+        this.category = category;
+    }
+
     public void togglePin() {
         this.pinned = !this.pinned;
     }
