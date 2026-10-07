@@ -29,8 +29,7 @@ public class Memo extends BaseEntity {
     @JoinColumn(name = "source_message_id")
     private ChatMessage sourceMessage;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(EnumType.STRING)
